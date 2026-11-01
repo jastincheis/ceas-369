@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ceas 3-6-9</title>
+<style>
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #14141a; color: #e6e6ea; font-family: system-ui, sans-serif; }
+  main { text-align: center; padding: 16px; }
+  #ora { font-size: clamp(56px, 18vw, 140px); font-variant-numeric: tabular-nums; font-weight: 600; }
+  #ora.da { color: #4fd18b; }
+  p { color: #9a9aa6; font-size: 18px; }
+</style>
+</head>
+<body>
+<main>
+  <div id="ora">--:--:--</div>
+  <p id="stare"></p>
+</main>
+<script>
+  // Un minut e „3-6-9” când HHMM se împarte la 3 (rădăcina cifrelor e 3, 6 sau 9).
+  const doi = n => String(n).padStart(2, '0');
+  function bun(d) { return (d.getHours() * 100 + d.getMinutes()) % 3 === 0; }
+  function urmatorul(d) {
+    const t = new Date(d); t.setSeconds(0, 0);
+    do { t.setMinutes(t.getMinutes() + 1); } while (!bun(t));
+    return t;
+  }
+  function tick() {
+    const d = new Date();
+    const el = document.getElementById('ora');
+    el.textContent = `${doi(d.getHours())}:${doi(d.getMinutes())}:${doi(d.getSeconds())}`;
+    el.classList.toggle('da', bun(d));
+    const u = urmatorul(d);
+    document.getElementById('stare').textContent = bun(d)
+      ? 'Acum e un minut 3-6-9.'
+      : `Următorul minut 3-6-9: ${doi(u.getHours())}:${doi(u.getMinutes())}`;
+  }
+  tick(); setInterval(tick, 1000);
+</script>
+</body>
+</html>
